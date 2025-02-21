@@ -94,6 +94,11 @@ void insertionSort(vector<int> arr, int n)
     }
 }
 
+/**
+ * Decide how many times to call the function repeatedly
+ * @param vecSize size of the vector to sort
+ * @return what size the loop should be
+ */
 int LoopSize(int vecSize)
 {
     int loopSize = 0;
@@ -175,6 +180,11 @@ vector<int> RandomVector(int size)
     return vec;
 }
 
+/**
+ * Calculate the time it takes to sort a vector using insertion sort
+ * @param vec vector to sort
+ * @return time for insertion sort
+ */
 double CalcInsertion(vector<int> vec)
 {
     // calculate time for insertion sort
@@ -191,6 +201,11 @@ double CalcInsertion(vector<int> vec)
     return insertionTime;
 }
 
+/**
+ * Calculate the time it takes to sort a vector using merge sort
+ * @param vec vector to sort
+ * @return time for merge sort
+ */
 double CalcMerge(vector<int> vec)
 {
     std::clock_t  start_time = std::clock();
@@ -209,6 +224,7 @@ double CalcMerge(vector<int> vec)
 /**
  * Test speeds of two sorting algorithms
  * @param vec vector to sort
+ * @return vector containing merge time and insertion time
  */
 vector<double> TestSpeed(vector<int> & vec)
 {
@@ -219,81 +235,13 @@ vector<double> TestSpeed(vector<int> & vec)
 }
 
 /**
- * Test two sorting algorithms multiple times
+ * Get the average runtime of each algorithm
  * @param size size of the vector
- * @param times how many times to test
+ * @return vector containing merge time and insertion time
  */
-void TestMultipleTimes(int size, int times)
-{
-    cout << "Test for input size of " << size << ':' << endl;
-    cout << endl;
-    for (auto i = 0; i < times; i++)
-    {
-        vector<int> vec = RandomVector(size);
-        vector<double> timeVec = TestSpeed(vec);
-        double mergeTime = timeVec.at(0);
-        double insertionTime = timeVec.at(1);
-
-        cout << "Merge sort time: " << mergeTime << endl;
-        cout << "Insertion sort time: " << insertionTime << endl;
-
-        if (mergeTime == insertionTime)
-        {
-            cout << "They have the same performance." << endl;
-        }
-        if (mergeTime > insertionTime)
-        {
-            cout << "Insertion sort is faster." << endl;
-        }
-        if (mergeTime < insertionTime)
-        {
-            cout << "Merge sort is faster" << endl;
-        }
-        cout << endl;
-    }
-}
-
-//void GetAverageTime(int size)
-//{
-//    cout << "Test for input size of " << size << ':' << endl;
-//    cout << endl;
-//    double mergeTimeTotal = 0;
-//    double insertionTimeTotal = 0;
-//
-//    int count = 200;
-//    for (auto i = 0; i < count; i++)
-//    {
-//        vector<int> vec = RandomVector(size);
-//        vector<double> timeVec = TestSpeed(vec);
-//
-//        mergeTimeTotal += timeVec.at(0);
-//        insertionTimeTotal += timeVec.at(1);
-//    }
-//
-//    double mergeTime = mergeTimeTotal / count;
-//    double insertionTime = insertionTimeTotal / count;
-//
-//    cout << "Merge sort time: " << mergeTime << endl;
-//    cout << "Insertion sort time: " << insertionTime << endl;
-//
-//    if (mergeTime == insertionTime)
-//    {
-//        cout << "They have the same performance." << endl;
-//    }
-//    if (mergeTime > insertionTime)
-//    {
-//        cout << "Insertion sort is faster." << endl;
-//    }
-//    if (mergeTime < insertionTime)
-//    {
-//        cout << "Merge sort is faster" << endl;
-//    }
-//    cout << endl;
-//}
-
 vector<double> GetAverageTime(int size)
 {
-    cout << "Test for input size of " << size << ':' << endl;
+    cout << "Testing for input size of " << size << ':' << endl;
     cout << endl;
     double mergeTimeTotal = 0;
     double insertionTimeTotal = 0;
@@ -312,59 +260,6 @@ vector<double> GetAverageTime(int size)
     double insertionTime = insertionTimeTotal / count;
 
     return {mergeTime, insertionTime};
-
-//    cout << "Merge sort time: " << mergeTime << endl;
-//    cout << "Insertion sort time: " << insertionTime << endl;
-//
-//    if (mergeTime == insertionTime)
-//    {
-//        cout << "They have the same performance." << endl;
-//    }
-//    if (mergeTime > insertionTime)
-//    {
-//        cout << "Insertion sort is faster." << endl;
-//    }
-//    if (mergeTime < insertionTime)
-//    {
-//        cout << "Merge sort is faster" << endl;
-//    }
-//    cout << endl;
-}
-
-void TestInsertion(int n)
-{
-    vector<int> vec = RandomVector(n);
-
-    // calculate time for insertion sort
-    std::clock_t start_time = std::clock();
-    insertionSort(vec, vec.size());
-    std::clock_t tot_time = std::clock() - start_time;
-    double insertionTime = ((double) tot_time) / (double) CLOCKS_PER_SEC;
-
-    if (insertionTime == 0)
-    {
-        insertionTime = CalcSmallInsertionTime(vec);
-    }
-
-    cout << "Time is " << insertionTime << endl;
-}
-
-void TestMerge(int n)
-{
-    vector<int> vec = RandomVector(n);
-
-    // Calculate time for merge sort
-    std::clock_t start_time = std::clock();
-    mergeSort(vec, 0, vec.size() - 1);
-    std::clock_t tot_time = std::clock() - start_time;
-    double mergeTime = ((double) tot_time) / (double) CLOCKS_PER_SEC;
-
-    if (mergeTime == 0)
-    {
-        mergeTime = CalcSmallMergeTime(vec);
-    }
-
-    cout << "Time is " << mergeTime << endl;
 }
 
 int main()
@@ -376,17 +271,13 @@ int main()
         cout << "Can't open file" << endl;
     }
     file << "Input Size, Merge Sort Time, Insertion Sort Time\n";
-//    file << 0 << ", " << 0 << ", " << 0 << '\n';
+
     for (auto i = 50; i < 3000; i += 50)
     {
         auto timeVec = GetAverageTime(i);
         file << i << ", " << timeVec.at(0) << ", " << timeVec.at(1) << '\n';
     }
     file.close();
-
-
-//    TestMerge(950);
-//    TestInsertion(950);
 
     return 0;
 }
